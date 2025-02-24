@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send & Show Location</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Send & Show My Location</h2>
+    <button onclick="getLocation()">Send Location</button>
+    <p id="status"></p>
+    <div id="map"></div>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showLocation, showError);
+            } else {
+                document.getElementById("status").innerHTML = "Geolocation is not supported by your browser.";
+            }
+        }
+
+        function showLocation(position) {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+            document.getElementById("status").innerHTML = `Latitude: ${lat}, Longitude: ${lon}`;
+            showMap(lat, lon);
+        }
+
+        function showMap(lat, lon) {
+            let mapUrl = `https://www.google.com/maps?q=${lat},${lon}&output=embed`;
+            document.getElementById("map").innerHTML = `<iframe width="100%" height="400px" src="${mapUrl}"></iframe>`;
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("status").innerHTML = "User denied location access.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("status").innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("status").innerHTML = "Request to get user location timed out.";
+                    break;
+                default:
+                    document.getElementById("status").innerHTML = "An unknown error occurred.";
+            }
+        }
+    </script>
+</body>
+</html>
